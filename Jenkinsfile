@@ -54,7 +54,7 @@ pipeline {
              script {
                sh '''
                    echo 124578Admin | docker login -u malekoues --password-stdin
-                   docker push ${DOCKERHUB_ID}/$IMAGE_NAME:$IMAGE_TAG
+                   docker push malekoues/$IMAGE_NAME:$IMAGE_TAG
                '''
              }
           }
