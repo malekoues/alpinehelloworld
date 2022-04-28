@@ -2,6 +2,8 @@ pipeline {
      environment {
        IMAGE_NAME = "alpinehelloworld"
        IMAGE_TAG = "latest"
+       DOCKERHUB_PASSWORD = "124578Admin"
+       DOCKERHUB_ID = "malekoues"
        STAGING = "malekoues-staging"
        PRODUCTION = "malekoues-production"
      }
@@ -48,17 +50,18 @@ pipeline {
           }
      }
               
+           
       stage ('Login and Push Image on docker hub') {
           agent any
           steps {
              script {
                sh '''
-                   echo 124578Admin | docker login -u malekoues --password-stdin
-                   docker push malekoues/$IMAGE_NAME:$IMAGE_TAG
+                   echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_ID --password-stdin
+                   docker push ${DOCKERHUB_ID}/$IMAGE_NAME:$IMAGE_TAG
                '''
              }
           }
-      }  
+      }
           
      stage('Push image in staging and deploy it') {
        when {
