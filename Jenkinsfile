@@ -1,11 +1,12 @@
 pipeline {
      environment {
+       ID_DOCKER = "choco1992"
        IMAGE_NAME = "alpinehelloworld"
        IMAGE_TAG = "latest"
        DOCKERHUB_PASSWORD = credentials('KeyDockerHub')
        DOCKERHUB_ID = "malekoues"
-       STAGING = "malekoues-staging"
-       PRODUCTION = "malekoues-production"
+       STAGING = "${ID_DOCKER}-staging"
+       PRODUCTION = "${ID_DOCKER}-production"
      }
      agent none
      stages {
@@ -13,7 +14,7 @@ pipeline {
              agent any
              steps {
                 script {
-                  sh 'docker build -t malekoues/$IMAGE_NAME:$IMAGE_TAG .'
+                  sh 'docker build -t ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG .'
                 }
              }
         }
@@ -22,7 +23,7 @@ pipeline {
             steps {
                script {
                  sh '''
-                    docker run --name $IMAGE_NAME -d -p 80:5000 -e PORT=5000 malekoues/$IMAGE_NAME:$IMAGE_TAG
+                    docker run --name $IMAGE_NAME -d -p 80:5000 -e PORT=5000 ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG
                     sleep 5
                  '''
                }
@@ -49,8 +50,7 @@ pipeline {
              }
           }
      }
-              
-           
+      
       stage ('Login and Push Image on docker hub') {
           agent any
           steps {
@@ -62,7 +62,7 @@ pipeline {
              }
           }
       }
-          
+
      stage('Push image in staging and deploy it') {
        when {
               expression { GIT_BRANCH == 'origin/master' }
@@ -82,6 +82,7 @@ pipeline {
           }
         }
      }
+
      stage('Push image in production and deploy it') {
        when {
               expression { GIT_BRANCH == 'origin/master' }
