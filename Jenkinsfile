@@ -47,6 +47,19 @@ pipeline {
              }
           }
      }
+              
+      stage ('Login and Push Image on docker hub') {
+          agent any
+          steps {
+             script {
+               sh '''
+                   echo $124578Admin | docker login -u $malekoues --password-stdin
+                   docker push ${DOCKERHUB_ID}/$IMAGE_NAME:$IMAGE_TAG
+               '''
+             }
+          }
+      }  
+          
      stage('Push image in staging and deploy it') {
        when {
               expression { GIT_BRANCH == 'origin/master' }
