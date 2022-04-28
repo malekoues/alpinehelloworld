@@ -2,7 +2,7 @@ pipeline {
      environment {
        IMAGE_NAME = "alpinehelloworld"
        IMAGE_TAG = "latest"
-       DOCKERHUB_PASSWORD = "124578Admin"
+       DOCKERHUB_PASSWORD = credentials('KeyDockerHub')
        DOCKERHUB_ID = "malekoues"
        STAGING = "malekoues-staging"
        PRODUCTION = "malekoues-production"
